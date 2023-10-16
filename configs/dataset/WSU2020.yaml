@@ -1,0 +1,5 @@
+dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation"
+label_type: "bounding box"
+
+width: 1920
+height: 1080

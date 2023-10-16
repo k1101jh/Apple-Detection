@@ -1,0 +1,5 @@
+dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation"
+label_type: "bounding box"
+
+# 데이터 사이즈 다름
+# 1494 x 1992, 2976 x 3968

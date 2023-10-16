@@ -1,0 +1,5 @@
+dataset_path: ""
+label_type: "mask"
+
+width: 720
+height: 1280
