@@ -1,4 +1,13 @@
-dataset_path: ""
+train:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/images"
+  mask_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/masks"
+# train_gt는 mask를 사용해서 생성
+  gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/ground_truth.json"
+
+test:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/images"
+  gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/ground_truth.json"
+
 label_type: "mask"
 
 width: 720

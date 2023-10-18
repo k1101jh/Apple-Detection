@@ -1,5 +1,8 @@
-training_dataset_path: "D:/DeepLearning/Dataset/Apple/Fuji-SfM/1-Mask-set/training_images_and_annotations"
-validation_dataset_path: r"D:\DeepLearning\Dataset\Apple\Fuji-SfM\1-Mask-set\validation_images_and_annotations"
+train:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/Fuji-SfM/1-Mask-set/training_images_and_annotations"
+validation:
+  dataset_path: r"D:\DeepLearning\Dataset\Apple\Fuji-SfM\1-Mask-set\validation_images_and_annotations"
+  
 label_type: "mask"
 
 width: 1024

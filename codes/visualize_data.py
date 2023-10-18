@@ -3,12 +3,16 @@ import hydra
 import glob
 import argparse
 import cv2
-import csv
-import json
-import pandas
+import numpy as np
 import matplotlib.pyplot as plt
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
+
+from torchvision import transforms
+
+from dataset.fuji_sfm_dataset import FujiSfMDataset
+from dataset.minne_apple_dataset import MinneAppleDataset
+from dataset.wsu_2019_dataset import WSU2019Dataset
 
 OmegaConf.register_new_resolver("merge", lambda x, y: x + y)
 
@@ -17,66 +21,56 @@ text_color = (15, 15, 240)
 imshow_height = 800
 
 
-def visualize_Fuji_SfM():
-    initialize(config_path="../configs", job_name="visualize_Fuji_SfM")
-    cfg = compose(config_name="config", overrides=["dataset=Fuji-SfM"])
-    print(OmegaConf.to_yaml(cfg.dataset))
+def visualize_dataset(dataset):
+    """
+    데이터 시각화
 
-    def read_csv(csv_filepath):
-        data = pandas.read_csv(csv_filepath)
-        data = [json.loads(element) for element in data["region_shape_attributes"].to_list()]
-        bboxes = []
-
-        for polygon_data in data:
-            all_points_x = polygon_data["all_points_x"]
-            all_points_y = polygon_data["all_points_y"]
-
-            min_x = min(all_points_x)
-            max_x = max(all_points_x)
-            min_y = min(all_points_y)
-            max_y = max(all_points_y)
-
-            # top-left, bottom-right
-            bboxes.append([min_x, max_y, max_x, min_y])
-
-        return bboxes
-
-        # with open(csv_filepath, 'r', encoding='utf-8') as f:
-        #     reader = csv.reader(f)
-
-    img_pathname = os.path.join(cfg.dataset.training_dataset_path, "*.jpg")
-    img_filelist = glob.glob(img_pathname)
-    img_filelist.sort()
-
-    csv_pathname = os.path.join(cfg.dataset.training_dataset_path, "*.csv")
-    csv_filelist = glob.glob(csv_pathname)
-    csv_filelist.sort()
-
-    num_images = len(img_filelist)
+    Args:
+        cfg (_type_): _description_
+        dataset (Dataset): _description_
+    """
+    num_images = len(dataset)
     cur_idx = 0
 
     while True:
-        image = cv2.imread(img_filelist[cur_idx])
-        bboxes = read_csv(csv_filelist[cur_idx])
-
-        # cv2.putText(image, , (10, 10), 2, 2, (15, 15, 240), 2, )
-        for bbox in bboxes:
-            cv2.rectangle(image, [round(bbox[0]), round(bbox[1])], [round(bbox[2]), round(bbox[3])], bbox_color, 2)
+        image, bboxes, filename = dataset[cur_idx]
+        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
         height, width = image.shape[:2]
         resize_ratio = imshow_height / height
         resized_width = round(width * resize_ratio)
         image = cv2.resize(image, dsize=(resized_width, imshow_height), interpolation=cv2.INTER_CUBIC)
 
+        for bbox in bboxes:
+            # min_x, max_y, max_x, min_y
+            resized_bbox = [
+                round(bbox[0] * resize_ratio),
+                round(bbox[1] * resize_ratio),
+                round(bbox[2] * resize_ratio),
+                round(bbox[3] * resize_ratio),
+            ]
+            cv2.rectangle(image, [resized_bbox[0], resized_bbox[1]], [resized_bbox[2], resized_bbox[3]], bbox_color, 2)
+
         cv2.putText(
             image,
-            f"{cur_idx + 1} / {num_images}  {os.path.basename(img_filelist[cur_idx])}",
-            (10, 50),
+            f"{cur_idx + 1} / {num_images}",
+            (10, 30),
             2,
-            1,
+            0.8,
             text_color,
             2,
-            cv2.LINE_8,
+            cv2.LINE_AA,
+        )
+
+        cv2.putText(
+            image,
+            f"{os.path.basename(filename)}",
+            (10, 60),
+            2,
+            0.8,
+            text_color,
+            2,
+            cv2.LINE_AA,
         )
 
         cv2.imshow(f"image_samples", image)
@@ -90,17 +84,23 @@ def visualize_Fuji_SfM():
             break
 
 
-def visualize_MinneApple():
-    initialize(config_path="../configs", job_name="visualize_MinneApple")
-    cfg = compose(config_name="config", overrides=["dataset=MinneApple"])
-    print(OmegaConf.to_yaml(cfg.dataset))
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Visualize Data")
-    parser.add_argument("--data", help="Dataset name to visualize", type=str, default="Fuji-SfM")
+    parser.add_argument("--data", help="Dataset name to visualize", type=str, default="MinneApple")
+    parser.add_argument(
+        "--dataset-type", help="Datset type. examples: train, test, validation...", type=str, default="train"
+    )
     args = parser.parse_args()
+
+    initialize(config_path="../configs", job_name="visualize_dataset")
+    cfg = compose(config_name="config", overrides=[f"dataset={args.data}"])
+    print(OmegaConf.to_yaml(cfg.dataset))
+
     if args.data == "Fuji-SfM":
-        visualize_Fuji_SfM()
+        dataset = FujiSfMDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
     elif args.data == "MinneApple":
-        visualize_MinneApple()
+        dataset = MinneAppleDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+    elif args.data == "WSU2019":
+        dataset = WSU2019Dataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+
+    visualize_dataset(dataset)

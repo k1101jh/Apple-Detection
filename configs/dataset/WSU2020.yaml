@@ -1,4 +1,7 @@
-dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation"
+train:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2020/Original RGB"
+  gt_path: "D:/DeepLearning/Dataset/Apple/WSU2020/Original RGB XML/XML"
+
 label_type: "bounding box"
 
 width: 1920
