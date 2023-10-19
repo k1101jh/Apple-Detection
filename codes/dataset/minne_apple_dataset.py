@@ -5,6 +5,8 @@ import json
 import numpy as np
 from tqdm import tqdm
 from PIL import Image
+from hydra import compose, initialize
+from omegaconf import DictConfig, OmegaConf
 
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -13,8 +15,6 @@ from torchvision import transforms
 
 class MinneAppleDataset(Dataset):
     def __init__(self, dataset_cfg, dataset_type, transform):
-        ## mask가 이미지 크기 벗어날 가능성 있음
-        # https://github.com/nicolaihaeni/MinneApple/blob/master/data/apple_dataset.py
         self.dataset_type = dataset_type
         if self.dataset_type == "train":
             data_path_cfg = dataset_cfg.train
@@ -44,7 +44,10 @@ class MinneAppleDataset(Dataset):
         for i in range(self.num_images):
             self.img_bboxes[i] = []
         for bbox_dict in json_object["annotations"]:
-            self.img_bboxes[bbox_dict["image_id"]].append(bbox_dict["bbox"])
+            bbox = bbox_dict["bbox"]
+            bbox[2] += bbox[0]
+            bbox[3] += bbox[1]
+            self.img_bboxes[bbox_dict["image_id"]].append(bbox)
 
     def generate_gt(self, mask_path, gt_path):
         gt_dict = {}
@@ -89,6 +92,11 @@ class MinneAppleDataset(Dataset):
                         colors_dict[mask[i, j]][3] = min(colors_dict[mask[i, j]][3], i)
 
             for color, bbox in colors_dict.items():
+                # [min_x, max_y, max_x, min_y] 를 [min_x, min_y, w, h] 형식으로 수정
+                bbox[2] -= bbox[0]
+                bbox[1], bbox[3] = bbox[3], bbox[1]
+                bbox[3] -= bbox[1]
+
                 bbox_dict = {}
                 bbox_dict["bbox"] = bbox
                 bbox_dict["id"] = color

@@ -85,6 +85,10 @@ def visualize_dataset(dataset):
             break
 
 
+def no_action_transform(x):
+    return x
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Visualize Data")
     parser.add_argument("--data", help="Dataset name to visualize", type=str, default="MinneApple")
@@ -94,16 +98,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     initialize(config_path="../configs", job_name="visualize_dataset")
-    cfg = compose(config_name="config", overrides=[f"dataset={args.data}"])
-    print(OmegaConf.to_yaml(cfg.dataset))
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset={args.data}"]).dataset
+    print(OmegaConf.to_yaml(dataset_cfg))
 
     if args.data == "MinneApple":
-        dataset = MinneAppleDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+        dataset = MinneAppleDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "WSU2019":
-        dataset = WSU2019Dataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+        dataset = WSU2019Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "WSU2020":
-        dataset = WSU2020Dataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+        dataset = WSU2020Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "Fuji-SfM":
-        dataset = FujiSfMDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+        dataset = FujiSfMDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
 
     visualize_dataset(dataset)
