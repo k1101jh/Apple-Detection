@@ -10,9 +10,10 @@ from omegaconf import DictConfig, OmegaConf
 
 from torchvision import transforms
 
-from dataset.fuji_sfm_dataset import FujiSfMDataset
 from dataset.minne_apple_dataset import MinneAppleDataset
 from dataset.wsu_2019_dataset import WSU2019Dataset
+from dataset.wsu_2020_dataset import WSU2020Dataset
+from dataset.fuji_sfm_dataset import FujiSfMDataset
 
 OmegaConf.register_new_resolver("merge", lambda x, y: x + y)
 
@@ -96,11 +97,13 @@ if __name__ == "__main__":
     cfg = compose(config_name="config", overrides=[f"dataset={args.data}"])
     print(OmegaConf.to_yaml(cfg.dataset))
 
-    if args.data == "Fuji-SfM":
-        dataset = FujiSfMDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
-    elif args.data == "MinneApple":
+    if args.data == "MinneApple":
         dataset = MinneAppleDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
     elif args.data == "WSU2019":
         dataset = WSU2019Dataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+    elif args.data == "WSU2020":
+        dataset = WSU2020Dataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
+    elif args.data == "Fuji-SfM":
+        dataset = FujiSfMDataset(cfg.dataset, args.dataset_type, transform=transforms.Lambda(lambda x: x))
 
     visualize_dataset(dataset)
