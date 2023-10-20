@@ -40,8 +40,10 @@ class RDAAppleDataset(Dataset):
             with open(json_file, "r", encoding="utf-8") as f:
                 json_object = json.load(f)
 
+            visible_bboxes = []
             for visibility in visibilities:
-                self.img_bboxes.append(json_object[visibility])
+                visible_bboxes += json_object[visibility]
+            self.img_bboxes.append(visible_bboxes)
 
     def __len__(self):
         return self.num_images

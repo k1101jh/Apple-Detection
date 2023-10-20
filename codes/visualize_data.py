@@ -116,6 +116,11 @@ if __name__ == "__main__":
     elif args.data == "KFuji RGB-DS":
         dataset = KFujiRGBDSDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "RDA-Apple":
-        dataset = RDAAppleDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
+        dataset = RDAAppleDataset(
+            dataset_cfg,
+            args.dataset_type,
+            transform=transforms.Lambda(no_action_transform),
+            visibilities=["good", "fair"],
+        )
 
     visualize_dataset(dataset)
