@@ -11,6 +11,8 @@ from dataset.minne_apple_dataset import MinneAppleDataset
 from dataset.wsu_2019_dataset import WSU2019Dataset
 from dataset.wsu_2020_dataset import WSU2020Dataset
 from dataset.fuji_sfm_dataset import FujiSfMDataset
+from dataset.kfuji_rgb_ds_dataset import KFujiRGBDSDataset
+from dataset.rda_apple_dataset import RDAAppleDataset
 
 
 def merge_datasets(dest_path, datasets, dataset_type):
@@ -52,18 +54,33 @@ if __name__ == "__main__":
     os.makedirs(dataset_path, exist_ok=True)
 
     initialize(config_path="../configs", job_name="merge_dataset")
-    dataset_type = "train"
+    dataset_type = "test"
 
     datasets = []
     # dataset_cfg = compose(config_name="config", overrides=[f"dataset=MinneApple"]).dataset
     # datasets.append(MinneAppleDataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
 
-    dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2019"]).dataset
-    datasets.append(WSU2019Dataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
+    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2019"]).dataset
+    # datasets.append(
+    #     WSU2019Dataset(
+    #         dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+    #     )
+    # )
 
     # dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2020"]).dataset
     # datasets.append(WSU2020Dataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
 
     # dataset_cfg = compose(config_name="config", overrides=[f"dataset=Fuji-SfM"]).dataset
     # datasets.append(FujiSfMDataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
-    # merge_datasets(dataset_path, datasets, dataset_type)
+
+    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=KFuji RGB-DS"]).dataset
+    # datasets.append(KFujiRGBDSDataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
+
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset=RDA-Apple"]).dataset
+    datasets.append(
+        RDAAppleDataset(
+            dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), visibilities=["good", "fair"]
+        )
+    )
+
+    merge_datasets(dataset_path, datasets, dataset_type)

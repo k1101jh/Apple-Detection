@@ -95,7 +95,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Visualize Data")
     parser.add_argument("--data", help="Dataset name to visualize", type=str, default="KFuji RGB-DS")
     parser.add_argument(
-        "--dataset-type", help="Datset type. examples: train, test, validation...", type=str, default="train"
+        "--dataset-type", help="Datset type. examples: train, test, validation...", type=str, default="validation"
     )
     args = parser.parse_args()
 
@@ -106,7 +106,9 @@ if __name__ == "__main__":
     if args.data == "MinneApple":
         dataset = MinneAppleDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "WSU2019":
-        dataset = WSU2019Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
+        dataset = WSU2019Dataset(
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
     elif args.data == "WSU2020":
         dataset = WSU2020Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "Fuji-SfM":

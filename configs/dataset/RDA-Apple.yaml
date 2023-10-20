@@ -5,9 +5,9 @@ train:
   dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/images"
   gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/train/labels
   
-validation:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/validation/images"
-  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/validation/labels
+test:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/test/images"
+  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/test/labels
   
 # [cx, cy, w, h] 0~1 사이 값
 label_type: "bounding box"

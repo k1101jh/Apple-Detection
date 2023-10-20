@@ -16,7 +16,7 @@ from torchvision import transforms
 
 
 class WSU2019Dataset(Dataset):
-    def __init__(self, dataset_cfg, dataset_type, transform):
+    def __init__(self, dataset_cfg, dataset_type, transform, exclude_bad_images=False):
         self.dataset_type = dataset_type
         if self.dataset_type == "train":
             data_path_cfg = dataset_cfg.train
@@ -30,6 +30,16 @@ class WSU2019Dataset(Dataset):
 
         img_pathname = os.path.join(data_path_cfg.dataset_path, "*.png")
         self.img_filelist = glob.glob(img_pathname)
+
+        self.files_to_exclude = []
+        if exclude_bad_images:
+            self.files_to_exclude = data_path_cfg.files_to_exclude
+            self.img_filelist = [
+                img_file
+                for img_file in self.img_filelist
+                if os.path.splitext(os.path.basename(img_file))[0] not in self.files_to_exclude
+            ]
+
         self.img_filelist = natsort.natsorted(self.img_filelist)
 
         self.num_images = len(self.img_filelist)
@@ -42,9 +52,11 @@ class WSU2019Dataset(Dataset):
         with open(csv_filepath, "r", encoding="utf-8") as f:
             for line in f.readlines():
                 bboxes = []
-                splitted = line.split(", ")[1:-1]
+                splitted = line.split(", ")[0:-1]
                 bbox = []
-                for i, pos_str in enumerate(splitted):
+                if os.path.splitext(os.path.basename(splitted[0]))[0] in self.files_to_exclude:
+                    continue
+                for i, pos_str in enumerate(splitted[1:]):
                     bbox.append(int(pos_str))
                     if (i + 1) % 4 == 0:
                         # [min_x, max_y, max_x, min_y]
