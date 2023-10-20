@@ -1,0 +1,16 @@
+dataset_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/images"
+annotation_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/annotations"
+
+train:
+  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/train.txt"
+  
+test:
+  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/test.txt"
+
+validation:
+  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/val.txt"
+  
+label_type: "mask"
+
+width: 1024
+height: 1024

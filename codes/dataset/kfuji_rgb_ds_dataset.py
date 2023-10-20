@@ -11,22 +11,24 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 
-class FujiSfMDataset(Dataset):
+class KFujiRGBDSDataset(Dataset):
     def __init__(self, dataset_cfg, dataset_type, transform):
         self.dataset_type = dataset_type
         if self.dataset_type == "train":
             data_path_cfg = dataset_cfg.train
+        elif self.dataset_type == "test":
+            data_path_cfg = dataset_cfg.test
         elif self.dataset_type == "validation":
             data_path_cfg = dataset_cfg.validation
         else:
             raise Exception(f"해당 데이터셋에는 {dataset_type} 타입의 데이터가 없습니다.")
 
-        img_pathname = os.path.join(data_path_cfg.dataset_path, "*.jpg")
-        self.img_filelist = glob.glob(img_pathname)
+        filelist = self.read_txt(data_path_cfg.filelist_txt_path)
+
+        self.img_filelist = [os.path.join(dataset_cfg.dataset_path, f"{filename}hr.jpg") for filename in filelist]
         self.img_filelist.sort()
 
-        csv_pathname = os.path.join(data_path_cfg.dataset_path, "*.csv")
-        self.csv_filelist = glob.glob(csv_pathname)
+        self.csv_filelist = [os.path.join(dataset_cfg.annotation_path, f"{filename}.csv") for filename in filelist]
         self.csv_filelist.sort()
 
         self.num_images = len(self.img_filelist)
@@ -37,22 +39,21 @@ class FujiSfMDataset(Dataset):
         for csv_file in self.csv_filelist:
             self.img_bboxes.append(self.read_csv(csv_file))
 
+    def read_txt(self, txt_filepath):
+        with open(txt_filepath, "r") as f:
+            lines = [line.rstrip("\n") for line in f.readlines()]
+        return lines
+
     def read_csv(self, csv_filepath):
-        data = pandas.read_csv(csv_filepath)
-        data = [json.loads(element) for element in data["region_shape_attributes"].to_list()]
         bboxes = []
-
-        for polygon_data in data:
-            all_points_x = polygon_data["all_points_x"]
-            all_points_y = polygon_data["all_points_y"]
-
-            min_x = min(all_points_x)
-            max_x = max(all_points_x)
-            min_y = min(all_points_y)
-            max_y = max(all_points_y)
-
-            # top-left, bottom-right
-            bboxes.append([min_x, max_y, max_x, min_y])
+        with open(csv_filepath, "r", encoding="utf-8") as f:
+            for line in f.readlines():
+                bbox = line.split(",")[1:-1]
+                bbox = [float(pos) for pos in bbox]
+                # [x, y, w, h] to [min_x, max_y, max_x, min_y](top-left, bottom-right)
+                bbox[0], bbox[1], bbox[2], bbox[3] = bbox[0], bbox[1] + bbox[3], bbox[0] + bbox[2], bbox[1]
+                bbox = [round(pos) for pos in bbox]
+                bboxes.append(bbox)
 
         return bboxes
 

@@ -15,12 +15,12 @@ from torchvision import transforms
 
 
 class RDAAppleDataset(Dataset):
-    def __init__(self, dataset_cfg, dataset_type, transform, visibility=["good"]):
+    def __init__(self, dataset_cfg, dataset_type, transform, visibilities=["good"]):
         self.dataset_type = dataset_type
         if self.dataset_type == "train":
             data_path_cfg = dataset_cfg.train
-        elif self.dataset_type == "test":
-            data_path_cfg = dataset_cfg.test
+        elif self.dataset_type == "validation":
+            data_path_cfg = dataset_cfg.validation
         else:
             raise Exception(f"해당 데이터셋에는 {dataset_type} 타입의 데이터가 없습니다.")
 
@@ -40,8 +40,8 @@ class RDAAppleDataset(Dataset):
             with open(json_file, "r", encoding="utf-8") as f:
                 json_object = json.load(f)
 
-            for v in visibility:
-                self.img_bboxes.append(json_object[v])
+            for visibility in visibilities:
+                self.img_bboxes.append(json_object[visibility])
 
     def __len__(self):
         return self.num_images

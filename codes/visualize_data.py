@@ -14,6 +14,7 @@ from dataset.minne_apple_dataset import MinneAppleDataset
 from dataset.wsu_2019_dataset import WSU2019Dataset
 from dataset.wsu_2020_dataset import WSU2020Dataset
 from dataset.fuji_sfm_dataset import FujiSfMDataset
+from dataset.kfuji_rgb_ds_dataset import KFujiRGBDSDataset
 from dataset.rda_apple_dataset import RDAAppleDataset
 
 OmegaConf.register_new_resolver("merge", lambda x, y: x + y)
@@ -92,7 +93,7 @@ def no_action_transform(x):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Visualize Data")
-    parser.add_argument("--data", help="Dataset name to visualize", type=str, default="RDA-Apple")
+    parser.add_argument("--data", help="Dataset name to visualize", type=str, default="KFuji RGB-DS")
     parser.add_argument(
         "--dataset-type", help="Datset type. examples: train, test, validation...", type=str, default="train"
     )
@@ -110,6 +111,8 @@ if __name__ == "__main__":
         dataset = WSU2020Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "Fuji-SfM":
         dataset = FujiSfMDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
+    elif args.data == "KFuji RGB-DS":
+        dataset = KFujiRGBDSDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "RDA-Apple":
         dataset = RDAAppleDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
 
