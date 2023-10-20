@@ -1,0 +1,16 @@
+# 농촌진흥청 사과 데이터
+# Korea Rural Development Administration Apple Dataset
+
+train:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/images"
+  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/train/labels
+  
+validation:
+  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/validation/images"
+  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/validation/labels
+  
+# [cx, cy, w, h] 0~1 사이 값
+label_type: "bounding box"
+
+width: 1024
+height: 1024

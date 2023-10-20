@@ -1,6 +1,7 @@
 train:
   dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation"
   gt_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation/Annotation.txt"
+  
 label_type: "bounding box"
 
 # 데이터 사이즈 다름
