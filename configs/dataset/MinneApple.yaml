@@ -3,10 +3,47 @@ train:
   mask_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/masks"
 # train_gt는 mask를 사용해서 생성
   gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/ground_truth.json"
+  files_to_exclude:
+    - "20150921_131234_image91"
+    - "20150921_131346_image926"
+    - "20150921_131346_image931"
+    - "20150921_131346_image936"
+    - "20150921_131346_image941"
+    - "20150921_131346_image946"
+    - "20150921_131346_image951"
+    - "20150921_131346_image956"
+    - "20150921_131346_image961"
+    - "20150921_131346_image966"
+    - "20150921_131346_image971"
+    - "20150921_131346_image976"
+    - "20150921_131346_image981"
+    - "20150921_131346_image986"
+    - "20150921_131346_image991"
+    - "20150921_131346_image996"
+    - "20150921_131346_image1001"
+    - "20150921_131346_image1006"
+    - "20150921_131346_image1011"
+    - "20150921_131346_image1016"
+    - "20150921_131346_image1021"
+    - "20150921_131346_image1026"
+    - "20150921_131346_image1031"
+    - "20150921_131346_image1036"
+    - "20150921_131346_image1041"
+    - "20150921_131346_image1046"
+    - "20150921_131346_image1051"
+    - "20150921_131346_image1056"
+    - "20150921_131346_image1061"
+    - "20150921_131346_image1066"
+    - "20150921_131346_image1071"
+    - "20150921_131346_image1081"
+
+
+
 
 test:
   dataset_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/images"
   gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/ground_truth.json"
+  files_to_exclude: []
 
 label_type: "mask"
 

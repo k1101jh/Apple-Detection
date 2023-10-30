@@ -1,8 +1,11 @@
 train:
   dataset_path: "D:/DeepLearning/Dataset/Apple/Fuji-SfM/1-Mask-set/training_images_and_annotations"
+  files_to_exclude:
+    - "_MG_7954_01"
   
 validation:
   dataset_path: "D:/DeepLearning/Dataset/Apple/Fuji-SfM/1-Mask-set/validation_images_and_annotations"
+  files_to_exclude: []
   
 label_type: "mask"
 

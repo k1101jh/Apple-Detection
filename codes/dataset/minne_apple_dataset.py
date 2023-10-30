@@ -14,7 +14,7 @@ from torchvision import transforms
 
 
 class MinneAppleDataset(Dataset):
-    def __init__(self, dataset_cfg, dataset_type, transform):
+    def __init__(self, dataset_cfg, dataset_type, transform, exclude_bad_images=False):
         self.dataset_type = dataset_type
         if self.dataset_type == "train":
             data_path_cfg = dataset_cfg.train
@@ -30,9 +30,18 @@ class MinneAppleDataset(Dataset):
         self.img_filelist = glob.glob(img_pathname)
         self.img_filelist.sort()
 
-        csv_pathname = os.path.join(data_path_cfg.gt_path, "*.csv")
-        self.csv_filelist = glob.glob(csv_pathname)
-        self.csv_filelist.sort()
+        img_bboxes = {}
+        for i in range(len(self.img_filelist)):
+            img_bboxes[i] = []
+
+        self.files_to_exclude = []
+        if exclude_bad_images:
+            self.files_to_exclude = data_path_cfg.files_to_exclude
+            self.img_filelist = [
+                img_file
+                for img_file in self.img_filelist
+                if os.path.splitext(os.path.basename(img_file))[0] not in self.files_to_exclude
+            ]
 
         self.num_images = len(self.img_filelist)
         self.image_transform = transform
@@ -40,14 +49,30 @@ class MinneAppleDataset(Dataset):
         with open(data_path_cfg.gt_path, "r", encoding="utf-8") as f:
             json_object = json.load(f)
 
-        self.img_bboxes = {}
-        for i in range(self.num_images):
-            self.img_bboxes[i] = []
+        image_ids = []
+        for image_info in json_object["images"]:
+            if os.path.splitext(image_info["filename"])[0] in self.files_to_exclude:
+                image_ids.append(image_info["id"])
+
         for bbox_dict in json_object["annotations"]:
             bbox = bbox_dict["bbox"]
             bbox[2] += bbox[0]
             bbox[3] += bbox[1]
-            self.img_bboxes[bbox_dict["image_id"]].append(bbox)
+            img_bboxes[bbox_dict["image_id"]].append(bbox)
+
+        ids_to_del = []
+        for key, val in img_bboxes.items():
+            if key in image_ids:
+                ids_to_del.append(key)
+
+        for id_to_del in ids_to_del:
+            del img_bboxes[id_to_del]
+
+        assert len(self.img_filelist) == len(
+            img_bboxes
+        ), f"img 개수와 gt 개수가 맞지 않습니다. img: {len(self.img_filelist)}개, gt: {len(self.img_bboxes)}개"
+
+        self.img_bboxes = list(img_bboxes.values())
 
     def generate_gt(self, mask_path, gt_path):
         gt_dict = {}

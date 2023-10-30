@@ -104,7 +104,9 @@ if __name__ == "__main__":
     print(OmegaConf.to_yaml(dataset_cfg))
 
     if args.data == "MinneApple":
-        dataset = MinneAppleDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
+        dataset = MinneAppleDataset(
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
     elif args.data == "WSU2019":
         dataset = WSU2019Dataset(
             dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
@@ -112,7 +114,9 @@ if __name__ == "__main__":
     elif args.data == "WSU2020":
         dataset = WSU2020Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "Fuji-SfM":
-        dataset = FujiSfMDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
+        dataset = FujiSfMDataset(
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
     elif args.data == "KFuji RGB-DS":
         dataset = KFujiRGBDSDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "RDA-Apple":
