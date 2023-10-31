@@ -16,6 +16,7 @@ from dataset.wsu_2020_dataset import WSU2020Dataset
 from dataset.fuji_sfm_dataset import FujiSfMDataset
 from dataset.kfuji_rgb_ds_dataset import KFujiRGBDSDataset
 from dataset.rda_apple_dataset import RDAAppleDataset
+from dataset.merged_dataset import MergedDataset
 
 OmegaConf.register_new_resolver("merge", lambda x, y: x + y)
 
@@ -125,6 +126,12 @@ if __name__ == "__main__":
             args.dataset_type,
             transform=transforms.Lambda(no_action_transform),
             visibilities=["good", "fair"],
+        )
+    elif args.data == "MergedData":
+        dataset = MergedDataset(
+            dataset_cfg,
+            args.dataset_type,
+            transform=transforms.Lambda(no_action_transform),
         )
 
     visualize_dataset(dataset)

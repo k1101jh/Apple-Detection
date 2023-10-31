@@ -3,6 +3,10 @@
     - dataset error
       - "1-Mask-set/training_images_and_annotations/_MG_7954_01.jpg & csv"
 
+  - ## KFuji RGB-DS
+    - dataset error
+      - "preprocessed data/square_annotations1/BD12_sup_201711_015_05_RGBhr.jpg"
+
   - ## WSU2019
     - dataset error
       - "CropLoadEstimation/image-33.png" and "CropLoadEstimation/image-33(1).png" is same

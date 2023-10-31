@@ -1,0 +1,16 @@
+# Yolov8 입력용 사과 데이터
+# 다른 데이터셋을 합친 결과물
+
+train:
+  dataset_path: "D:/DeepLearning/Experiment/Object Detection/Apple Detection/datasets/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)/train/images"
+  gt_path: "D:/DeepLearning/Experiment/Object Detection/Apple Detection/datasets/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)/train/labels"
+  
+test:
+  dataset_path: "D:/DeepLearning/Experiment/Object Detection/Apple Detection/datasets/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)/test/images"
+  gt_path: "D:/DeepLearning/Experiment/Object Detection/Apple Detection/datasets/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)/test/labels"
+  
+# [cx, cy, w, h] 0~1 사이 값
+label_type: "bounding box"
+
+width: 1024
+height: 1024

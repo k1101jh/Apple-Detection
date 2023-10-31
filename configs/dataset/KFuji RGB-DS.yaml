@@ -3,6 +3,8 @@ annotation_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/a
 
 train:
   filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/train.txt"
+  files_to_exclude:
+   - "BD12_sup_201711_015_05_RGB"
   
 test:
   filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/test.txt"

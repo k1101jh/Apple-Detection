@@ -3,13 +3,13 @@
 
 train:
   dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/images"
-  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/train/labels
+  gt_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/labels"
   
 test:
   dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/test/images"
-  gt_path: D:/DeepLearning/Dataset/Apple/RDA_Apple/test/labels
+  gt_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/test/labels"
   
-# [cx, cy, w, h] 0~1 사이 값
+# [cx, cy, w, h]
 label_type: "bounding box"
 
 width: 1024

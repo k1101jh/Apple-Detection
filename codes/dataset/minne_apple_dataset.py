@@ -57,7 +57,7 @@ class MinneAppleDataset(Dataset):
         for bbox_dict in json_object["annotations"]:
             bbox = bbox_dict["bbox"]
             bbox[2] += bbox[0]
-            bbox[3] += bbox[1]
+            bbox[1], bbox[3] = bbox[1] + bbox[3], bbox[1]
             img_bboxes[bbox_dict["image_id"]].append(bbox)
 
         ids_to_del = []

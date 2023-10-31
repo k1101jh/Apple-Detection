@@ -1,6 +1,7 @@
 import os
 import glob
 import shutil
+import numpy as np
 from tqdm import tqdm
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
@@ -21,6 +22,7 @@ def merge_datasets(dest_path, datasets, dataset_type):
         cy = ((xyxy[1] + xyxy[3]) / 2) / height
         w = (xyxy[2] - xyxy[0]) / width
         h = (xyxy[1] - xyxy[3]) / height
+
         return [cx, cy, w, h]
 
     def save_txt(filepath, bboxes, width, height):
@@ -29,6 +31,7 @@ def merge_datasets(dest_path, datasets, dataset_type):
         with open(filepath, "w") as f:
             for bbox in bboxes:
                 cxywh = xyxy_to_cxywh(bbox, width, height)
+                cxywh = np.clip(cxywh, 0, 1)
                 f.write(f"{class_id} {cxywh[0]} {cxywh[1]} {cxywh[2]} {cxywh[3]}\n")
 
     image_path = os.path.join(dest_path, dataset_type, "images")
@@ -51,39 +54,39 @@ def no_action_transform(x):
 
 
 if __name__ == "__main__":
-    dataset_path = "datasets/mixed_data(RDA, WSU2019_w_exclude, MinneApple, KFuji, Fuji)"
+    dataset_path = "datasets/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)"
     os.makedirs(dataset_path, exist_ok=True)
 
     initialize(config_path="../configs", job_name="merge_dataset")
     dataset_type = "train"
 
     datasets = []
-    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=MinneApple"]).dataset
-    # datasets.append(
-    #     MinneAppleDataset(
-    #         dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
-    #     )
-    # )
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset=MinneApple"]).dataset
+    datasets.append(
+        MinneAppleDataset(
+            dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
+    )
 
-    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2019"]).dataset
-    # datasets.append(
-    #     WSU2019Dataset(
-    #         dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
-    #     )
-    # )
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2019"]).dataset
+    datasets.append(
+        WSU2019Dataset(
+            dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
+    )
 
     # dataset_cfg = compose(config_name="config", overrides=[f"dataset=WSU2020"]).dataset
     # datasets.append(WSU2020Dataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
 
-    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=Fuji-SfM"]).dataset
-    # datasets.append(
-    #     FujiSfMDataset(
-    #         dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
-    #     )
-    # )
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset=Fuji-SfM"]).dataset
+    datasets.append(
+        FujiSfMDataset(
+            dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+        )
+    )
 
-    # dataset_cfg = compose(config_name="config", overrides=[f"dataset=KFuji RGB-DS"]).dataset
-    # datasets.append(KFujiRGBDSDataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
+    dataset_cfg = compose(config_name="config", overrides=[f"dataset=KFuji RGB-DS"]).dataset
+    datasets.append(KFujiRGBDSDataset(dataset_cfg, dataset_type, transform=transforms.Lambda(no_action_transform)))
 
     dataset_cfg = compose(config_name="config", overrides=[f"dataset=RDA-Apple"]).dataset
     datasets.append(
