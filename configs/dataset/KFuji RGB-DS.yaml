@@ -1,16 +1,17 @@
-dataset_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/images"
-annotation_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/annotations"
+base_path: D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data
+dataset_path: ${dataset.base_path}/images
+annotation_path: ${dataset.base_path}/annotations
 
 train:
-  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/train.txt"
+  filelist_txt_path: ${dataset.base_path}/sets/train.txt
   files_to_exclude:
    - "BD12_sup_201711_015_05_RGB"
   
 test:
-  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/test.txt"
+  filelist_txt_path: ${dataset.base_path}/sets/test.txt
 
 validation:
-  filelist_txt_path: "D:/DeepLearning/Dataset/Apple/KFuji RGB-DS/preprocessed data/sets/val.txt"
+  filelist_txt_path: ${dataset.base_path}/sets/val.txt
   
 label_type: "mask"
 

@@ -18,10 +18,7 @@ from torchvision import transforms
 class WSU2019Dataset(Dataset):
     def __init__(self, dataset_cfg, dataset_type, transform, exclude_bad_images=False):
         self.dataset_type = dataset_type
-        if self.dataset_type == "train":
-            data_path_cfg = dataset_cfg.train
-        else:
-            raise Exception(f"해당 데이터셋에는 {dataset_type} 타입의 데이터가 없습니다.")
+        data_path_cfg = dataset_cfg[dataset_type]
 
         # 데이터셋 오류 확인 및 해결
         if os.path.exists(os.path.join(data_path_cfg.dataset_path, "image-33(1).png")):
