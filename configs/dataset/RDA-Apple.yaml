@@ -1,13 +1,14 @@
 # 농촌진흥청 사과 데이터
 # Korea Rural Development Administration Apple Dataset
+base_path: D:/DeepLearning/Dataset/Apple/RDA_Apple
 
 train:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/images"
-  gt_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/train/labels"
+  dataset_path: ${dataset.base_path}/train/images
+  gt_path: ${dataset.base_path}/train/labels
   
 test:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/test/images"
-  gt_path: "D:/DeepLearning/Dataset/Apple/RDA_Apple/test/labels"
+  dataset_path: ${dataset.base_path}/test/images
+  gt_path: ${dataset.base_path}/test/labels
   
 # [cx, cy, w, h]
 label_type: "bounding box"

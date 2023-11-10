@@ -1,6 +1,8 @@
+base_path: D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation
+
 train:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation"
-  gt_path: "D:/DeepLearning/Dataset/Apple/WSU2019/CropLoadEstimation/Annotation.txt"
+  dataset_path: ${dataset.base_path}
+  gt_path: ${dataset.base_path}/Annotation.txt
   files_to_exclude:
     - "image-1"
     - "image-2"
@@ -47,10 +49,6 @@ train:
     - "image-234"
     - "image-236"
     - "image-237"
-
-
-
-
   
 label_type: "bounding box"
 

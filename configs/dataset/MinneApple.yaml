@@ -1,8 +1,10 @@
+base_path: D:/DeepLearning/Dataset/Apple/MinneApple
+
 train:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/images"
-  mask_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/masks"
+  dataset_path: ${dataset.base_path}/detection/train/images
+  mask_path: ${dataset.base_path}/detection/train/masks
 # train_gt는 mask를 사용해서 생성
-  gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/detection/train/ground_truth.json"
+  gt_path: ${dataset.base_path}/detection/train/ground_truth.json
   files_to_exclude:
     - "20150921_131234_image91"
     - "20150921_131346_image926"
@@ -38,11 +40,9 @@ train:
     - "20150921_131346_image1081"
 
 
-
-
 test:
-  dataset_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/images"
-  gt_path: "D:/DeepLearning/Dataset/Apple/MinneApple/test_data/detection/ground_truth.json"
+  dataset_path: ${dataset.base_path}/test_data/detection/images
+  gt_path: ${dataset.base_path}/test_data/detection/ground_truth.json
   files_to_exclude: []
 
 label_type: "mask"

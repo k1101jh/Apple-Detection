@@ -16,12 +16,7 @@ from torchvision import transforms
 class MinneAppleDataset(Dataset):
     def __init__(self, dataset_cfg, dataset_type, transform, exclude_bad_images=False):
         self.dataset_type = dataset_type
-        if self.dataset_type == "train":
-            data_path_cfg = dataset_cfg.train
-        elif self.dataset_type == "test":
-            data_path_cfg = dataset_cfg.test
-        else:
-            raise Exception(f"해당 데이터셋에는 {dataset_type} 타입의 데이터가 없습니다.")
+        data_path_cfg = dataset_cfg[dataset_type]
 
         if not os.path.exists(data_path_cfg.gt_path):
             self.generate_gt(data_path_cfg.mask_path, data_path_cfg.gt_path)
