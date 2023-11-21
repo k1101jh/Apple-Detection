@@ -1,7 +1,7 @@
 # Ultralytics YOLO 🚀, AGPL-3.0 license
 # Default training settings and hyperparameters for medium-augmentation COCO training
 
-path: "/data/kjh/Apple Dataset/mixed_data"
+path: "/data/kjh/Apple Dataset/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji)"
 train: "train/images"
 val: "test/images"
 nc: 1
