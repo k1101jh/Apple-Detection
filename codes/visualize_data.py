@@ -25,7 +25,7 @@ text_color = (15, 15, 240)
 imshow_height = 800
 
 
-def visualize_dataset(dataset):
+def visualize_dataset(dataset, save_path):
     """
     데이터 시각화
 
@@ -55,37 +55,48 @@ def visualize_dataset(dataset):
             ]
             cv2.rectangle(image, [resized_bbox[0], resized_bbox[1]], [resized_bbox[2], resized_bbox[3]], bbox_color, 2)
 
-        cv2.putText(
-            image,
-            f"{cur_idx + 1} / {num_images}",
-            (10, 30),
-            2,
-            0.8,
-            text_color,
-            2,
-            cv2.LINE_AA,
-        )
+        # cv2.putText(
+        #     image,
+        #     f"{cur_idx + 1} / {num_images}",
+        #     (10, 30),
+        #     2,
+        #     0.8,
+        #     text_color,
+        #     2,
+        #     cv2.LINE_AA,
+        # )
 
-        cv2.putText(
-            image,
-            f"{os.path.basename(filename)}",
-            (10, 60),
-            2,
-            0.8,
-            text_color,
-            2,
-            cv2.LINE_AA,
-        )
+        # cv2.putText(
+        #     image,
+        #     f"{os.path.basename(filename)}",
+        #     (10, 60),
+        #     2,
+        #     0.8,
+        #     text_color,
+        #     2,
+        #     cv2.LINE_AA,
+        # )
 
         cv2.imshow(f"image_samples", image)
 
         key_inp = cv2.waitKey(0) & 0xFF
         if key_inp == ord("a"):
-            cur_idx = cur_idx - 1 if cur_idx > 0 else num_images - 1
+            cur_idx = cur_idx - 1
         elif key_inp == ord("d"):
-            cur_idx = cur_idx + 1 if cur_idx < num_images - 1 else 0
+            cur_idx = cur_idx + 1
+        elif key_inp == ord("z"):
+            cur_idx = cur_idx - 10
+        elif key_inp == ord("c"):
+            cur_idx = cur_idx + 10
+        elif key_inp == ord("x"):
+            if save_path != "":
+                cv2.imwrite(os.path.join(save_path, os.path.basename(filename)), image)
         elif key_inp == ord("q"):
             break
+
+        if cur_idx < 0:
+            cur_idx = num_images + cur_idx
+        cur_idx = cur_idx % num_images
 
 
 def no_action_transform(x):
@@ -98,6 +109,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset-type", help="Datset type. examples: train, test, validation...", type=str, default="validation"
     )
+    parser.add_argument("--save-path", type=str, default="")
     args = parser.parse_args()
 
     initialize(config_path="../configs", job_name="visualize_dataset")
@@ -106,17 +118,17 @@ if __name__ == "__main__":
 
     if args.data == "MinneApple":
         dataset = MinneAppleDataset(
-            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=False
         )
     elif args.data == "WSU2019":
         dataset = WSU2019Dataset(
-            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=False
         )
     elif args.data == "WSU2020":
         dataset = WSU2020Dataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
     elif args.data == "Fuji-SfM":
         dataset = FujiSfMDataset(
-            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=True
+            dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform), exclude_bad_images=False
         )
     elif args.data == "KFuji RGB-DS":
         dataset = KFujiRGBDSDataset(dataset_cfg, args.dataset_type, transform=transforms.Lambda(no_action_transform))
@@ -125,7 +137,7 @@ if __name__ == "__main__":
             dataset_cfg,
             args.dataset_type,
             transform=transforms.Lambda(no_action_transform),
-            visibilities=["good", "fair"],
+            visibilities=["good", "fair", "bad"],
         )
     elif args.data == "MergedData":
         dataset = MergedDataset(
@@ -134,4 +146,4 @@ if __name__ == "__main__":
             transform=transforms.Lambda(no_action_transform),
         )
 
-    visualize_dataset(dataset)
+    visualize_dataset(dataset, args.save_path)
