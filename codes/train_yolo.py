@@ -13,13 +13,15 @@ def train():
     model = YOLO("yolov8m.pt")
     model.to("cuda")
 
+    imgsz = 1200
+
     model.train(
         data="configs/mixed_data(RDA, WSU2019, MinneApple, KFuji, Fuji).yaml",
-        name="yolov8m_mixed_data_1200",
+        name=f"yolov8m_mixed_data_{imgsz}",
         epochs=1000,
         patience=200,
         batch=5,
-        imgsz=1200,
+        imgsz=imgsz,
         optimizer="AdamW",
         lr0=0.001,
         cos_lr=True,
